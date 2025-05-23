@@ -1,9 +1,8 @@
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from dotenv import load_dotenv
 import os
-import psycopg2
+from psycopg2 import connect
+from psycopg2.extras import RealDictCursor
 
 load_dotenv()
 
@@ -13,21 +12,17 @@ DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "5432")
 DB_NAME = os.getenv("DB_NAME", "projet_fastapi")
 
-DATABASE_URL = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-print(DATABASE_URL)
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(bind=engine)
+conn=connect(database = DB_NAME, 
+            user = DB_USER, 
+            host= DB_HOST,
+            password = DB_PASSWORD,
+            port = DB_PORT,cursor_factory=RealDictCursor)
 
-# SQLAlchemy 2.0+ : définition correcte de la base
-class Base(DeclarativeBase):
-    pass
 
 def get_db():
-    db = SessionLocal()
+    cursor = conn.cursor()
     try:
-        yield db
+        yield cursor
     finally:
-        db.close()
+        cursor.close()
 
-# À utiliser si tu veux créer les tables à partir des modèles
-Base.metadata.create_all(bind=engine)

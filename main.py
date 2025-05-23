@@ -1,18 +1,26 @@
-from fastapi import FastAPI
-from databases.connection import Base, engine
-from models.utilisateurs import Utilisateur
-from models.groupe import Groupe
-from models.prompt import Prompt
-from models.achat import Achat
-from models.noter import Notes
-from models.voter import Voter
 
-# Créer les tables si elles n'existent pas
-Base.metadata.create_all(bind=engine)
+from fastapi.middleware.cors import CORSMiddleware
+from routes.groupe_controller import routes
+from routes import utilisateur_controller
+from fastapi import FastAPI,Depends
+
+
 app = FastAPI()
 
-@app.get("/hello")
-def hello_world():
-    return {"message": "Hello WORLD"}  # ✅ Recommandé : retourner un dict/JSON, pas une string brute
 
 
+app.include_router(routes)
+app.include_router(utilisateur_controller.routes)
+
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],)
