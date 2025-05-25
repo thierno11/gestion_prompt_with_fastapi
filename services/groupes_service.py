@@ -50,7 +50,7 @@ def modifier_groupe(id: int, request: GroupeSchema, db):
     return GroupeResponse(**updated)
 
 
-def recuperer_groupes(db):
+def recuperer_groupes(current_user:UtilisateurResponse,db):
     db.execute("SELECT * FROM groupes")
     groupes = db.fetchall()
     groupes = map(lambda g : GroupeResponse(**g),groupes)

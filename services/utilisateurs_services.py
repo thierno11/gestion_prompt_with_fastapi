@@ -42,7 +42,7 @@ def recuperer_user_par_email(email,db):
     utilisateur = db.fetchone()
     if not utilisateur:
         return None
-    return UtilisateurRequest(**utilisateur)
+    return UtilisateurResponse(**utilisateur)
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -80,7 +80,7 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-async def decoded_token(token,db):
+def decoded_token(token,db):
     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     username = payload.get("sub")
     if username is None:

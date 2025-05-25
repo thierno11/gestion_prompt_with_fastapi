@@ -11,14 +11,12 @@ from services.utilisateurs_services import (
 )
 from databases.connection import get_db
 
-routes = APIRouter(tags=["Utilisateurs"])
+routes = APIRouter(tags=["Utilisateurs"],prefix="/utilisateurs")
 
-auth_scheme = OAuth2PasswordBearer(tokenUrl="token")
+auth_scheme = OAuth2PasswordBearer(tokenUrl="utilisateurs/token")
 
-async def get_current_user(
-    token: Annotated[str, Depends(auth_scheme)],
-    db=Depends(get_db)
-):
+def get_current_user(token:Annotated[str, Depends(auth_scheme)],db=Depends(get_db)):
+    
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -27,7 +25,7 @@ async def get_current_user(
     user = decoded_token(db=db, token=token)
     if user is None:
         raise credentials_exception
-    return UtilisateurResponse(**user)
+    return user
 
 @routes.post("/", response_model=UtilisateurResponse)
 def create_users(

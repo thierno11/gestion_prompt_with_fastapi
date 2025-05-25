@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 from psycopg2 import connect
 from psycopg2.extras import RealDictCursor
+from .sript import table_utilisateur,table_groupes,ENUM_ROLE,ENUM_STATUS
 
 load_dotenv()
 
@@ -25,4 +26,23 @@ def get_db():
         yield cursor
     finally:
         cursor.close()
+
+
+def init_database():
+    """Initialise la structure de la base de données."""
+    with get_db() as conn:
+        with conn.cursor() as cursor:
+            try:
+                # Exécution des scripts dans une transaction
+                cursor.execute(ENUM_ROLE)
+                cursor.execute(ENUM_STATUS)
+                cursor.execute(table_groupes)
+                cursor.execute(table_utilisateur)
+                # Validation explicite des modifications
+                conn.commit()
+                print("Base de données initialisée avec succès.")
+            except Exception as e:
+                conn.rollback()
+                print(f"Erreur lors de l'initialisation de la base de données: {e}")
+                raise
 

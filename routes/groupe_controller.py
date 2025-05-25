@@ -3,7 +3,7 @@ from schema.groupe_schema import GroupeResponse,GroupeSchema
 from typing import List
 from services.groupes_service import creer_groupe,modifier_groupe,recuperer_groupes,recuperer_groupe_par_id
 from databases.connection import get_db
-from utilisateur_controller import get_current_user
+from .utilisateur_controller import get_current_user
 from typing import Annotated
 from schema.utilisateur_schema import UtilisateurResponse
 
