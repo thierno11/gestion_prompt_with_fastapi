@@ -29,7 +29,6 @@ def get_db():
 
 def get_connection():
     """Gestionnaire de contexte pour obtenir une connexion à la base de données."""
-    conn = None
     try:
         return conn
     finally:
