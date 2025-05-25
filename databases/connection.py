@@ -27,10 +27,18 @@ def get_db():
     finally:
         cursor.close()
 
+def get_connection():
+    """Gestionnaire de contexte pour obtenir une connexion à la base de données."""
+    conn = None
+    try:
+        return conn
+    finally:
+        print("terminee")
+
 
 def init_database():
     """Initialise la structure de la base de données."""
-    with get_db() as conn:
+    with get_connection() as conn:
         with conn.cursor() as cursor:
             try:
                 # Exécution des scripts dans une transaction
