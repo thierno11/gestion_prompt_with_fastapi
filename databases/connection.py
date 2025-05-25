@@ -30,6 +30,11 @@ def get_db():
 def get_connection():
     """Gestionnaire de contexte pour obtenir une connexion à la base de données."""
     try:
+        conn=connect(database = DB_NAME, 
+            user = DB_USER, 
+            host= DB_HOST,
+            password = DB_PASSWORD,
+            port = DB_PORT,cursor_factory=RealDictCursor)
         return conn
     finally:
         print("terminee")
